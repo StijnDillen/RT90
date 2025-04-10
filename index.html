@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rad van Fortuin</title>
+  <title>Rad van Fortuuin</title>
   <style>
     body {
       display: flex;
@@ -37,11 +37,13 @@
 <body>
   <h1>Rad van Fortuin</h1>
   <canvas id="wheel" width="500" height="500"></canvas>
-  <button id="spinBtn">Draai het wiel!</button>
+  <button id="spinBtn">Draai het wiiel!</button>
   <p id="result"></p>
   
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      console.log("DOM geladen en script gestart");
+      
       // Lijst met de 23 namen
       const names = [
         "BERT BUTENAERS",
@@ -81,6 +83,11 @@
       // Functie om het wiel te tekenen
       function drawWheel() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Testtekening: zwart vakje
+        ctx.fillStyle = 'black';
+        ctx.fillRect(10, 10, 50, 50);
+        
         for (let i = 0; i < numSectors; i++) {
           const startAngle = currentRotation + i * sliceAngle;
           const endAngle = startAngle + sliceAngle;
@@ -88,3 +95,65 @@
           ctx.beginPath();
           ctx.moveTo(centerX, centerY);
           ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+          ctx.closePath();
+          ctx.fill();
+          
+          // Tekst tekenen in het midden van de sector
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          const textAngle = startAngle + sliceAngle / 2;
+          ctx.rotate(textAngle);
+          ctx.textAlign = "right";
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillText(names[i], radius - 10, 5);
+          ctx.restore();
+        }
+        // Teken de pointer (rode driehoek) iets lager verplaatst zodat deze zeker zichtbaar is
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - radius + 10);
+        ctx.lineTo(centerX - 10, centerY - radius + 25);
+        ctx.lineTo(centerX + 10, centerY - radius + 25);
+        ctx.closePath();
+        ctx.fill();
+      }
+      
+      // Eerste tekening van het wiel
+      drawWheel();
+      
+      // Draai het wiel bij klikken op de knop
+      document.getElementById("spinBtn").addEventListener("click", function() {
+        this.disabled = true;
+        document.getElementById("result").textContent = "";
+        
+        const extraDegrees = Math.floor(Math.random() * 360);
+        const totalDegrees = 360 * (3 + Math.random() * 3) + extraDegrees;
+        const totalRotation = totalDegrees * Math.PI / 180;
+        
+        const duration = 4000;
+        const startTime = performance.now();
+        const initialRotation = currentRotation;
+        
+        function animate(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          currentRotation = initialRotation + totalRotation * easeOut;
+          drawWheel();
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            let normalizedRotation = currentRotation % (2 * Math.PI);
+            let winningAngle = (2 * Math.PI - normalizedRotation + Math.PI / 2) % (2 * Math.PI);
+            let winningIndex = Math.floor(winningAngle / sliceAngle) % numSectors;
+            document.getElementById("result").textContent = "Gewonnen: " + names[winningIndex];
+            document.getElementById("spinBtn").disabled = false;
+          }
+        }
+        requestAnimationFrame(animate);
+      });
+    });
+  </script>
+</body>
+</html>
