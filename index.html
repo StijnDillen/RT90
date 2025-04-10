@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rad van Fortuin</title>
+  <title>Redenaar RT 90 Tongeren</title>
   <style>
     body {
       display: flex;
@@ -35,7 +35,7 @@
   </style>
 </head>
 <body>
-  <h1>Rad van Fortuin</h1>
+  <h1>Redenaar RT90 Tongeren</h1>
   <canvas id="wheel" width="500" height="500"></canvas>
   <button id="spinBtn">Draai het wiel!</button>
   <p id="result"></p>
@@ -152,7 +152,7 @@
             let pointerAngle = 3 * Math.PI / 2;
             let winningAngle = ((pointerAngle - normalizedRotation) + 2 * Math.PI) % (2 * Math.PI);
             let winningIndex = Math.floor(winningAngle / sliceAngle) % numSectors;
-            document.getElementById("result").textContent = "Gewonnen: " + names[winningIndex];
+            document.getElementById("result").textContent = "De volgende redenaar: " + names[winningIndex];
             document.getElementById("spinBtn").disabled = false;
           }
         }
