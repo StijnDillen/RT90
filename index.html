@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rad van Fortuin</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    canvas {
+      background: white;
+      border: 2px solid #ccc;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rad van Fortuin</h1>
+  <canvas id="wheel" width="500" height="500"></canvas>
+  <button id="spinBtn">Draai het wiel!</button>
+  <p id="result"></p>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Lijst met de 23 namen
+      const names = [
+        "BERT BUTENAERS",
+        "Christoph Van Herck",
+        "FILIP MENTEN",
+        "Geert Kerkhofs",
+        "Joachim Peyls",
+        "Karel Dullaers",
+        "KAREL SMEYERS",
+        "MATTHIAS MARIS",
+        "Michiel Cielen",
+        "Michiel Peters",
+        "PHILIPPE HOUBEN",
+        "Pieter Duchateau",
+        "PIETER GOFFIN",
+        "Simon D'HUYS",
+        "Steven Geurts",
+        "Stijn Dillen",
+        "Yannick Dewalque",
+        "YANNICK CROMMEN",
+        "Bernard Schiepers",
+        "Louis Kemps",
+        "Lucas Jacobs",
+        "Hendrik",
+        "Freek Hogendoorn"
+      ];
+      
+      const canvas = document.getElementById("wheel");
+      const ctx = canvas.getContext("2d");
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 240;
+      const numSectors = names.length;
+      const sliceAngle = (2 * Math.PI) / numSectors;
+      let currentRotation = 0;
+      
+      // Functie om het wiel te tekenen
+      function drawWheel() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < numSectors; i++) {
+          const startAngle = currentRotation + i * sliceAngle;
+          const endAngle = startAngle + sliceAngle;
+          ctx.fillStyle = i % 2 === 0 ? "#3498db" : "#2ecc71";
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, startAngle, endAngle);
